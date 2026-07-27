@@ -37,7 +37,8 @@ v2의 출발점이 된다.
 
 amoroso와 동일 계열로 맞춘다(학습 목적상 의도적 선택).
 
-- **백엔드**: Java 21, Spring Boot 3.x, Spring Security + OAuth2 Client,
+- **백엔드**: Java 21, Spring Boot 4.x (설계 시점엔 3.x였으나 OSS 지원 종료로 착수 시 4.1로 결정),
+  Spring Security + OAuth2 Client,
   Spring Data JPA + MySQL 8, jjwt, PortOne 서버 SDK, CoolSMS(Nurigo) SDK, springdoc
 - **프론트**: React (Vite), 백엔드 학습이 주목적이므로 최소한의 화면만
 - **로컬 인프라**: Docker Compose로 MySQL. Redis는 v1에서 사용하지 않는다
