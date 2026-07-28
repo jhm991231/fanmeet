@@ -1,0 +1,22 @@
+# 테스트 전용 설정: 외부 인프라(Docker/MySQL) 없이도 전체 테스트가 돌아야 한다
+spring:
+  datasource:
+    url: jdbc:h2:mem:fanmeet-test;MODE=MySQL
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: test-client-id # 실제 카카오 호출은 없지만 설정 검증을 통과하기 위한 더미
+            client-secret: test-client-secret
+
+jwt:
+  secret: fanmeet-test-secret-key-must-be-32-bytes!
+
+app:
+  front-url: http://localhost:5173
