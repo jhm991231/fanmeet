@@ -4,6 +4,7 @@ spring:
     username: root
     password: localdev
   jpa:
+    open-in-view: false # API 서버는 응답 직렬화까지 DB 커넥션을 붙잡을 이유가 없다
     hibernate:
       ddl-auto: update
     properties:
@@ -13,6 +14,7 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug
+    org.springframework.security.web.DefaultSecurityFilterChain: debug # 부팅 시 필터 체인 순서 출력
 
 jwt:
   secret: ${JWT_SECRET:fanmeet-local-only-secret-key-32-bytes!!} # 로컬 개발용 기본값, 배포 환경에선 반드시 환경변수로
