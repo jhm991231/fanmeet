@@ -7,7 +7,6 @@ import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import javax.crypto.SecretKey;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,13 +18,10 @@ public class JwtProvider {
     private final long accessValiditySeconds;
     private final long refreshValiditySeconds;
 
-    public JwtProvider(
-            @Value("${jwt.secret}") String secret,
-            @Value("${jwt.access-validity-seconds:1800}") long accessValiditySeconds,
-            @Value("${jwt.refresh-validity-seconds:1209600}") long refreshValiditySeconds) {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-        this.accessValiditySeconds = accessValiditySeconds;
-        this.refreshValiditySeconds = refreshValiditySeconds;
+    public JwtProvider(JwtProperties properties) {
+        this.key = Keys.hmacShaKeyFor(properties.secret().getBytes(StandardCharsets.UTF_8));
+        this.accessValiditySeconds = properties.accessValiditySeconds();
+        this.refreshValiditySeconds = properties.refreshValiditySeconds();
     }
 
     public String createAccessToken(Long userId, Role role) {

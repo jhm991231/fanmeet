@@ -17,6 +17,8 @@ spring:
 
 jwt:
   secret: fanmeet-test-secret-key-must-be-32-bytes!
+  access-validity-seconds: 1800
+  refresh-validity-seconds: 1209600
 
 app:
   front-url: http://localhost:5173

@@ -16,6 +16,8 @@ logging:
 
 jwt:
   secret: ${JWT_SECRET:fanmeet-local-only-secret-key-32-bytes!!} # 로컬 개발용 기본값, 배포 환경에선 반드시 환경변수로
+  access-validity-seconds: 1800      # 30분
+  refresh-validity-seconds: 1209600  # 14일
 
 app:
   front-url: http://localhost:5173 # 로그인 성공 후 돌려보낼 프론트 주소
