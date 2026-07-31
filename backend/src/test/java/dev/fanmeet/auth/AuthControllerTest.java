@@ -10,6 +10,7 @@ import dev.fanmeet.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.context.ActiveProfiles;
@@ -25,7 +26,8 @@ import org.springframework.test.web.servlet.MockMvc;
 class AuthControllerTest {
 
     // application-test.yml의 jwt.secret과 같아야 "만료" 상황을 정확히 재현할 수 있다
-    private static final String TEST_SECRET = "fanmeet-test-secret-key-must-be-32-bytes!";
+    @Value("${jwt.secret}")
+    String SECRET;
 
     @Autowired
     MockMvc mockMvc;
@@ -66,7 +68,7 @@ class AuthControllerTest {
 
     @Test
     void 만료된_토큰으로_조회하면_401이다() throws Exception {
-        JwtProvider expiredIssuer = new JwtProvider(new JwtProperties(TEST_SECRET, -1, -1));
+        JwtProvider expiredIssuer = new JwtProvider(new JwtProperties(SECRET, -1, -1));
         String expiredToken = expiredIssuer.createAccessToken(user.getId(), user.getRole());
 
         mockMvc.perform(get("/api/me").header("Authorization", "Bearer " + expiredToken))

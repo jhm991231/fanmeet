@@ -2,6 +2,7 @@ package dev.fanmeet.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -22,8 +23,8 @@ class CustomOAuth2UserServiceTest {
 
     @Test
     void 처음_로그인한_유저는_FAN으로_가입된다() {
-        when(userRepository.findByProviderAndProviderId("kakao", "12345")).thenReturn(Optional.empty());
-        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        given(userRepository.findByProviderAndProviderId("kakao", "12345")).willReturn(Optional.empty());
+        given(userRepository.save(any(User.class))).willAnswer(invocation -> invocation.getArgument(0));
 
         User user = service.upsert(kakaoAttributes);
 
@@ -37,7 +38,7 @@ class CustomOAuth2UserServiceTest {
         User existing = User.builder()
                 .provider("kakao").providerId("12345").nickname("현민").role(Role.HOST)
                 .build();
-        when(userRepository.findByProviderAndProviderId("kakao", "12345")).thenReturn(Optional.of(existing));
+        given(userRepository.findByProviderAndProviderId("kakao", "12345")).willReturn(Optional.of(existing));
 
         User user = service.upsert(kakaoAttributes);
 
