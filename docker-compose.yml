@@ -2,6 +2,8 @@ services:
   mysql:
     image: mysql:8.4
     container_name: fanmeet-mysql
+    # MySQL 기본값은 REPEATABLE READ 다. READ COMMITTED 로 낮춰 쓴다.
+    command: --transaction-isolation=READ-COMMITTED
     environment:
       MYSQL_ROOT_PASSWORD: localdev
       MYSQL_DATABASE: fanmeet
