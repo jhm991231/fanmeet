@@ -3,6 +3,8 @@ spring:
     url: jdbc:mysql://localhost:3307/fanmeet
     username: root
     password: localdev
+    hikari:
+      transaction-isolation: TRANSACTION_READ_COMMITTED
   jpa:
     open-in-view: false # API 서버는 응답 직렬화까지 DB 커넥션을 붙잡을 이유가 없다
     hibernate:
