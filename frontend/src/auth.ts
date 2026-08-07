@@ -1,10 +1,15 @@
 // access 토큰은 의도적으로 "모듈 변수(메모리)"에만 보관한다.
 // localStorage에 두지 않는 이유: XSS로 통째로 털리는 저장소이기 때문.
-// 새로고침하면 사라지지만, 그건 refresh 토큰 재발급(Task 5)으로 해결한다.
+// 새로고침하면 사라지지만 refresh 쿠키는 살아 있으므로, api.ts의 인터셉터가
+// 첫 401에서 재발급받아 조용히 복구한다.
 let accessToken: string | null = null;
 
 export function setAccessToken(token: string) {
   accessToken = token;
+}
+
+export function clearAccessToken() {
+  accessToken = null;
 }
 
 export function getAccessToken() {
