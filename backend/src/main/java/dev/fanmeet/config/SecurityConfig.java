@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -53,6 +54,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/health").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        // 이 둘은 access 토큰이 없는 상태에서 부르는 API 다. 만료돼서
+                        // 재발급하는 것이므로 인증을 요구하면 모순이다. 인증은 필터가 아니라
+                        // 핸들러 안에서 쿠키의 refresh 토큰으로 대신한다.
+                        //
+                        // "/api/auth/**" 로 열지 않은 것은 의도적이다. 와일드카드는 경로
+                        // 공간 전체를 열어, 나중에 그 아래 추가되는 엔드포인트까지 아무도
+                        // 모르게 공개된다. 메서드까지 지정해 범위를 더 좁혔다.
+                        .requestMatchers(HttpMethod.POST, "/api/auth/refresh", "/api/auth/logout")
+                        .permitAll()
                         .anyRequest().authenticated())
                 // 아이디/비번 인증 자리에 우리 JWT 검문원을 대신 배치한다
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
