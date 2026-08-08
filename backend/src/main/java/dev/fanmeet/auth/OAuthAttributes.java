@@ -13,6 +13,7 @@ public record OAuthAttributes(String provider, String providerId, String nicknam
         return switch (registrationId) {
             case "kakao" -> ofKakao(attributes);
             case "google" -> ofGoogle(attributes);
+            case "naver" -> ofNaver(attributes);
             default -> throw new IllegalArgumentException("지원하지 않는 로그인 제공자: " + registrationId);
         };
     }
@@ -25,6 +26,16 @@ public record OAuthAttributes(String provider, String providerId, String nicknam
                 "kakao",
                 String.valueOf(attributes.get("id")),
                 (String) profile.get("nickname"));
+    }
+
+    @SuppressWarnings("unchecked")
+    private static OAuthAttributes ofNaver(Map<String, Object> attributes) {
+        // 실제 정보는 response 아래에 한 겹 더 들어 있다. 바깥에는 resultcode/message만 있다.
+        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+        return new OAuthAttributes(
+                "naver",
+                (String) response.get("id"),
+                (String) response.get("nickname"));
     }
 
     private static OAuthAttributes ofGoogle(Map<String, Object> attributes) {

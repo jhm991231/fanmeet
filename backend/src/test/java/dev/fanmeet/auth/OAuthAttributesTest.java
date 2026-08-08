@@ -37,8 +37,23 @@ class OAuthAttributesTest {
     }
 
     @Test
+    void 네이버_응답에서_response_안의_id와_닉네임을_꺼낸다() {
+        // 네이버는 실제 정보가 response 아래에 한 겹 더 들어 있다.
+        Map<String, Object> naverResponse = Map.of(
+                "resultcode", "00",
+                "message", "success",
+                "response", Map.of("id", "32742776", "nickname", "현민"));
+
+        OAuthAttributes attributes = OAuthAttributes.from("naver", naverResponse);
+
+        assertThat(attributes.provider()).isEqualTo("naver");
+        assertThat(attributes.providerId()).isEqualTo("32742776");
+        assertThat(attributes.nickname()).isEqualTo("현민");
+    }
+
+    @Test
     void 모르는_제공자면_예외가_난다() {
-        assertThatThrownBy(() -> OAuthAttributes.from("naver", Map.of()))
+        assertThatThrownBy(() -> OAuthAttributes.from("facebook", Map.of()))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

@@ -5,6 +5,7 @@ import { clearAccessToken } from './auth';
 const PROVIDERS = [
   { id: 'kakao', label: '카카오로 로그인' },
   { id: 'google', label: '구글로 로그인' },
+  { id: 'naver', label: '네이버로 로그인' },
 ];
 
 // 백엔드 MeResponse와 짝을 이루는 타입. 서버가 계약을 바꾸면 여기도 같이 바뀌어야 한다.
