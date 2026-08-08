@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
-import { api } from './api';
+import { api, API_BASE } from './api';
 import { clearAccessToken } from './auth';
+
+const PROVIDERS = [
+  { id: 'kakao', label: '카카오로 로그인' },
+  { id: 'google', label: '구글로 로그인' },
+];
 
 // 백엔드 MeResponse와 짝을 이루는 타입. 서버가 계약을 바꾸면 여기도 같이 바뀌어야 한다.
 interface Me {
@@ -50,8 +55,15 @@ export default function App() {
           <button onClick={logout}>로그아웃</button>
         </>
       ) : (
-        // 로그인 시작은 API 호출이 아니라 "백엔드의 출발 창구로 이동"이다
-        <a href="http://localhost:8080/oauth2/authorization/kakao">카카오로 로그인</a>
+        // 로그인 시작은 API 호출이 아니라 "백엔드의 출발 창구로 이동"이다.
+        // 제공자가 늘어도 달라지는 건 URL 끝의 registrationId 하나뿐이다.
+        <nav style={{ display: 'flex', gap: '1rem' }}>
+          {PROVIDERS.map(({ id, label }) => (
+            <a key={id} href={`${API_BASE}/oauth2/authorization/${id}`}>
+              {label}
+            </a>
+          ))}
+        </nav>
       )}
     </main>
   );

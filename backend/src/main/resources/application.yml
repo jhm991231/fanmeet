@@ -15,6 +15,13 @@ spring:
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/kakao"
             scope: profile_nickname
+          google:
+            client-name: Google
+            redirect-uri: "{baseUrl}/login/oauth2/code/google"
+            # 기본 scope는 "openid, profile, email" 인데, openid가 있으면 스프링이 OIDC로
+            # 처리해 OidcUserService를 쓴다. 그러면 우리가 등록한 CustomOAuth2UserService가
+            # 호출되지 않아 DB 저장이 통째로 건너뛰어진다. openid를 빼서 카카오와 같은 경로를 타게 한다.
+            scope: profile, email
         provider:
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize

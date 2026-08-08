@@ -1,11 +1,14 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import { getAccessToken, setAccessToken } from './auth';
 
-const BASE_URL = 'http://localhost:8080';
+// 로그인 시작 링크(<a href>)도 이 값을 쓰므로 내보낸다.
+// 백엔드 주소를 아는 곳은 이 파일 하나여야 한다.
+export const API_BASE = 'http://localhost:8080';
+
 const REFRESH_URL = '/api/auth/refresh';
 
 export const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: API_BASE,
   // refresh 쿠키를 주고받으려면 필요하다. 오리진이 다르면(5173 → 8080)
   // 이 옵션 없이는 브라우저가 쿠키를 싣지 않는다.
   withCredentials: true,
@@ -35,7 +38,7 @@ function refreshOnce(): Promise<string> {
   }
 
   refreshing = axios
-    .post<{ accessToken: string }>(`${BASE_URL}${REFRESH_URL}`, null, {
+    .post<{ accessToken: string }>(`${API_BASE}${REFRESH_URL}`, null, {
       withCredentials: true,
     })
     .then((res) => {

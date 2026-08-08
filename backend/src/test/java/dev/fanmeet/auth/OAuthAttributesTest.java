@@ -22,6 +22,21 @@ class OAuthAttributesTest {
     }
 
     @Test
+    void 구글_응답에서_sub와_이름을_꺼낸다() {
+        // 카카오와 달리 중첩이 없다. sub는 구글이 부여한 고유 식별자.
+        Map<String, Object> googleResponse = Map.of(
+                "sub", "117905123456789",
+                "name", "정현민",
+                "email", "jhm991231@gmail.com");
+
+        OAuthAttributes attributes = OAuthAttributes.from("google", googleResponse);
+
+        assertThat(attributes.provider()).isEqualTo("google");
+        assertThat(attributes.providerId()).isEqualTo("117905123456789");
+        assertThat(attributes.nickname()).isEqualTo("정현민");
+    }
+
+    @Test
     void 모르는_제공자면_예외가_난다() {
         assertThatThrownBy(() -> OAuthAttributes.from("naver", Map.of()))
                 .isInstanceOf(IllegalArgumentException.class);
