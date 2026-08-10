@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api, API_BASE } from './api';
 import { clearAccessToken } from './auth';
+import PhoneVerifyForm from './components/PhoneVerifyForm';
 
 const PROVIDERS = [
   { id: 'kakao', label: '카카오로 로그인' },
@@ -23,12 +24,16 @@ export default function App() {
   // 메모리의 access 토큰이 없어도 일단 호출한다. 401이 나면 인터셉터가 refresh 쿠키로
   // 재발급받아 재시도하므로, 새로고침해도 로그인이 유지된다. 쿠키까지 없으면 재발급도
   // 401이라 catch로 떨어지고 로그인 화면을 보여준다.
-  useEffect(() => {
+  const loadMe = () =>
     api
       .get<Me>('/api/me')
       .then((res) => setMe(res.data))
       .catch(() => setMe(null))
       .finally(() => setLoading(false));
+
+  useEffect(() => {
+    loadMe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const logout = async () => {
@@ -53,6 +58,8 @@ export default function App() {
             {me.nickname}님 ({me.role}) — 휴대폰 인증{' '}
             {me.phoneVerified ? '완료' : '미완료'}
           </p>
+          {/* 인증이 끝나면 폼이 사라진다. 상태는 서버가 쥐고 있으므로 다시 불러 판단한다. */}
+          {!me.phoneVerified && <PhoneVerifyForm onVerified={loadMe} />}
           <button onClick={logout}>로그아웃</button>
         </>
       ) : (
